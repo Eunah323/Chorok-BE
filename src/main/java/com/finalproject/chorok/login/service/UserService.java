@@ -15,9 +15,11 @@ import com.finalproject.chorok.login.validator.Validator;
 import com.finalproject.chorok.plant.model.Plant;
 import com.finalproject.chorok.plant.repository.PlantRepository;
 import com.finalproject.chorok.login.dto.LabelingResponseDto;
+import com.finalproject.chorok.post.utils.CommUtils;
 import com.finalproject.chorok.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class UserService {
     private final RedisUtil redisUtil;
     private final PlantRepository plantRepository;
     private final PlantUtils plantUtils;
+    private final CommUtils commUtils;
 
     @Transactional
     public String registerUser(SignupRequestDto requestDto) {
@@ -104,7 +107,7 @@ public class UserService {
 
         String tempEncPassword = passwordEncoder.encode(tempPassword); // 암호화
         System.out.println("암호화"+tempEncPassword);
-        findUser.changeTempPassword(tempEncPassword);
+        findUser.changePassword(tempEncPassword);
 
         sendTempPasswordConfirmEmail(findUser, tempPassword);
         System.out.println("작업완료");
@@ -281,4 +284,14 @@ public class UserService {
             return null;
         }
     }
+
+    public HashMap<String, String> updatePassword(String password, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        validator.passwordCheck(password);
+        String encodedPassword = passwordEncoder.encode(password);
+        user.changePassword(encodedPassword);
+        userRepository.save(user);
+        return commUtils.responseHashMap(HttpStatus.OK);
+    }
+
 }

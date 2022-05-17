@@ -56,6 +56,12 @@ public class Validator {
         if (userRepository.findByNickname(duplicateChkDto.getNickname()).isPresent()) {
             throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
         }
+
+    }
+    public void passwordCheck(String password) throws IllegalArgumentException {
+        if(!Pattern.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$", password)){
+            throw new IllegalArgumentException("비밀번호에 대소문자, 숫자를 포함하여 8~20자로 입력해주세요.");
+        }
     }
 
 
