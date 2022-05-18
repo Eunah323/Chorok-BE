@@ -43,15 +43,6 @@ public class User {
     private Long kakaoId;
     private String googleId;
 
-    //    @Builder
-//    public User(String username, String password, String nickname) {
-//        this.username = username;
-//        this.password = password;
-//        this.nickname = nickname;
-//        this.kakaoId = null;
-//        this.googleId = null;
-//    }
-
     @Builder
     public User(String username, String password, String nickname, String emailCheckToken, String profileImageUrl) {
         this.username = username;
