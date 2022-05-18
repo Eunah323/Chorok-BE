@@ -137,7 +137,7 @@ public class UserController {
 
     }
 
-
+    // 이메일 인증버튼 클릭시 호출
     @GetMapping("/auth/check-email-token")
     public void checkEmailToken(String token, String email, HttpServletResponse response) throws InvalidActivityException {
         System.out.println("이메일 토큰 인증과정 시작");
@@ -149,11 +149,6 @@ public class UserController {
             throw new InvalidActivityException("유효하지 않은 주소입니다.");
         }
 
-    }
-    //임시 비밀번호 보내기
-    @PostMapping("/user/labeling/test")
-    public void labelingTest(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        userService.labelingTest(userDetails);
     }
 
     // 식물 추천 테스트
@@ -195,7 +190,7 @@ public class UserController {
     @PatchMapping("/user/update/profile")
     public ResponseEntity<HashMap<String, String>> updateProfile(
             @RequestParam(value = "nickname", required = false) String nickname,
-            @RequestParam(value = "profileImageUrl", required = false) MultipartFile multipartFile,
+            @RequestParam(value = "profileImgUrl", required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(nickname, multipartFile, userDetails));

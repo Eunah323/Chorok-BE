@@ -41,6 +41,8 @@ public class User {
 
     @Setter
     private Long kakaoId;
+    @Setter
+    @Lob
     private String googleId;
 
     @Builder

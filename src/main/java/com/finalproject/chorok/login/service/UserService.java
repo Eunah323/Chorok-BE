@@ -78,12 +78,12 @@ public class UserService {
 
         User user = new User(username, password, nickname, emailCheckToken, profileImgUrl);
 
-//         //이메일 인증 코드부분
-//        redisUtil.set(emailCheckToken, user, 2);
-//
+         //이메일 인증 코드부분
+        redisUtil.set(emailCheckToken, user, 2);
+
 //        System.out.println(user+"4");
-//
-//        sendSignupConfirmEmail(user);
+
+        sendSignupConfirmEmail(user);
 
         // 이메일 인증 생략하고 회원가입(추후 삭제)
         User savedUser = userRepository.save(user);
@@ -107,7 +107,6 @@ public class UserService {
                 () -> new InvalidActivityException("존재하지 않는 이메일입니다.")
         );
         System.out.println("이메일 존재여부 체크");
-         //인증 이메일 1시간 지났는지 체크
 
         String tempPassword = temporaryPassword(10); // 8글자 랜덤으로 임시 비밀번호 생성
 

@@ -54,21 +54,24 @@ public class GoogleUserService {
     private String clientSecret;
 
 
-    public GoogleUserResponseDto googleLogin(String code) throws JsonProcessingException {
+    public GoogleUserResponseDto googleLogin(String accessToken) throws JsonProcessingException {
         //HTTP Request를 위한 RestTemplate
         RestTemplate restTemplate = new RestTemplate();
-
-        // 1. "인가 코드"로 "액세스 토큰" 요청
-        String accessToken = getAccessToken(restTemplate, code);
+//        System.out.println("여기 들어오나1");
+//        // 1. "인가 코드"로 "액세스 토큰" 요청
+//        String accessToken = getAccessToken(restTemplate, code);
+//        System.out.println("여기 들어오나2");
         // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         GoogleUserInfoDto snsUserInfoDto = getGoogleUserInfo(restTemplate, accessToken);
+        System.out.println("여기 들어오나3");
         // 3. "구글 사용자 정보"로 필요시 회원가입  및 이미 같은 이메일이 있으면 기존회원으로 로그인
         User googleUser = registerGoogleIfNeeded(snsUserInfoDto);
+        System.out.println("여기 들어오나4");
 
         // 4. 강제 로그인 처리
         final String AUTH_HEADER = "Authorization";
         final String TOKEN_TYPE = "BEARER";
-
+        System.out.println("여기 들어오나5");
         String jwt_token = forceLogin(googleUser); // 로그인처리 후 토큰 받아오기
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTH_HEADER, TOKEN_TYPE + " " + jwt_token);
@@ -84,7 +87,7 @@ public class GoogleUserService {
 
 
     private String getAccessToken(RestTemplate restTemplate, String code) throws JsonProcessingException {
-
+        System.out.println("여기 들어오나5");
         //Google OAuth Access Token 요청을 위한 파라미터 세팅
         GoogleOAuthRequest googleOAuthRequestParam = GoogleOAuthRequest
                 .builder()
@@ -93,12 +96,13 @@ public class GoogleUserService {
                 .code(code)
 //                .redirectUri("https://memegle.xyz/redirect/google")
 //                .redirectUri("http://localhost:3000/redirect/google")
-                .redirectUri("http://localhost:8080/auth/google/callback")
+                .redirectUri("http://localhost:3000/auth/google/callback")
                 .grantType("authorization_code")
                 .accessType("offline")
                 .scope("openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email").build();
 
 
+        System.out.println("여기 들어오나6");
         //JSON 파싱을 위한 기본값 세팅
         //요청시 파라미터는 스네이크 케이스로 세팅되므로 Object mapper에 미리 설정해준다.
         ObjectMapper mapper = new ObjectMapper();
@@ -129,6 +133,7 @@ public class GoogleUserService {
 
         GoogleUserInfoDto googleUserInfoDto = GoogleUserInfoDto.builder()
                 .googleId(userInfo.get("sub"))
+                .googleId("12345")
                 .email(userInfo.get("email"))
                 .nickname(userInfo.get("name"))
                 .profileImage(userInfo.get("picture"))
@@ -136,9 +141,9 @@ public class GoogleUserService {
 
         String nickname = userInfo.get("name");
         String email = userInfo.get("email");
-        String googleId = userInfo.get("sub");
+//        String googleId = userInfo.get("sub");
         String profileImage = userInfo.get("picture");
-        System.out.println("구글 사용자 정보:  " + googleId + ", "+ nickname + ", " + email + ", " + profileImage);
+        System.out.println("구글 사용자 정보:  "   + ", "+ nickname + ", " + email + ", " + profileImage);
         return googleUserInfoDto;
     }
 
