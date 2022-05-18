@@ -107,41 +107,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
                 .anyRequest().authenticated()
-//
-//                .anyRequest()
-//                .permitAll()
                 .and()
                 // [로그아웃 기능]
                 .logout()
                 // 로그아웃 요청 처리 URL
                 .logoutUrl("/auth/logOut")
                 .permitAll();
-//                .and()
-//                .exceptionHandling()
-                // "접근 불가" 페이지 URL 설정
-//                .accessDeniedPage("/forbidden.html");
-    }
 
-    //cors
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("http://localhost:3000");
-//        configuration.addAllowedOrigin("http://localhost:8080");
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.addExposedHeader("Authorization");
-////        configuration.addAllowedOrigin("http://52.79.233.178:8080");
-////        configuration.addAllowedOrigin("http://52.79.233.178:3000");
-////        configuration.addAllowedOrigin("http://52.79.233.178");
-////        configuration.addAllowedOrigin("/**"); //배포시
-////        configuration.addAllowedOrigin(""); //배포시
-//        configuration.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    }
 
 
     @Bean
@@ -219,23 +192,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("http://localhost:3000");
-//        configuration.addAllowedOrigin("http://localhost:8080");
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.addExposedHeader("Authorization");
-////        configuration.addAllowedOrigin("http://52.79.233.178:8080");
-////        configuration.addAllowedOrigin("http://52.79.233.178:3000");
-////        configuration.addAllowedOrigin("http://52.79.233.178");
-////        configuration.addAllowedOrigin("/**"); //배포시
-////        configuration.addAllowedOrigin(""); //배포시
-//        configuration.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }

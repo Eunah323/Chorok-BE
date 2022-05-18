@@ -96,8 +96,9 @@ public class UserController {
 
         String profileImgUrl = null;
 
-        if(!multipartFile.isEmpty()){
-        profileImgUrl = s3Uploader.upload(multipartFile, "static");}
+        if(multipartFile!=null){
+            profileImgUrl = s3Uploader.upload(multipartFile, "static");
+        }
         SignupRequestDto signupRequestDto = new SignupRequestDto(username, password, nickname, profileImgUrl);
         return userService.registerUser(signupRequestDto);
     }
@@ -188,5 +189,15 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updatePassword(@RequestParam(name = "password") String password, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return ResponseEntity.status(HttpStatus.OK).body(userService.updatePassword(password, userDetails));
+    }
+
+    //프로필 수정하기
+    @PatchMapping("/user/update/profile")
+    public ResponseEntity<HashMap<String, String>> updateProfile(
+            @RequestParam(value = "nickname", required = false) String nickname,
+            @RequestParam(value = "profileImageUrl", required = false) MultipartFile multipartFile,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(nickname, multipartFile, userDetails));
     }
 }
