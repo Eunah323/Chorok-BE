@@ -17,6 +17,9 @@ import com.finalproject.chorok.security.GoogleOAuthResponse;
 import com.finalproject.chorok.security.UserDetailsImpl;
 import com.finalproject.chorok.security.jwt.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +31,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import software.amazon.ion.Decimal;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.CookieManager;
 import java.util.Map;
 import java.util.UUID;
 
@@ -131,9 +138,10 @@ public class GoogleUserService {
 
         Map<String,String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>(){});
 
+        String googleId = userInfo.get("sub");
+        Decimal googleIdContainer = Decimal.valueOf(googleId);
         GoogleUserInfoDto googleUserInfoDto = GoogleUserInfoDto.builder()
-                .googleId(userInfo.get("sub"))
-                .googleId("12345")
+                .googleId(googleIdContainer)
                 .email(userInfo.get("email"))
                 .nickname(userInfo.get("name"))
                 .profileImage(userInfo.get("picture"))
@@ -141,16 +149,15 @@ public class GoogleUserService {
 
         String nickname = userInfo.get("name");
         String email = userInfo.get("email");
-//        String googleId = userInfo.get("sub");
         String profileImage = userInfo.get("picture");
-        System.out.println("구글 사용자 정보:  "   + ", "+ nickname + ", " + email + ", " + profileImage);
+        System.out.println("구글 사용자 정보:  " + googleIdContainer  + ", "+ nickname + ", " + email + ", " + profileImage);
         return googleUserInfoDto;
     }
 
     private User registerGoogleIfNeeded(GoogleUserInfoDto googleUserInfoDto) {
 
         // DB 에 중복된 google Id 가 있는지 확인
-        String googleUserId = googleUserInfoDto.getGoogleId();
+        Decimal googleUserId = googleUserInfoDto.getGoogleId();
         User googleUser = userRepository.findByGoogleId(googleUserId)
                 .orElse(null);
         String nickname = googleUserInfoDto.getNickname();
@@ -202,4 +209,17 @@ public class GoogleUserService {
 
         return JwtTokenUtils.generateJwtToken(userDetails);
     }
+
+//    void RevokeAcess()
+//    {
+//        try{
+//            HttpClient client = new DefaultHttpClient();
+//            HttpPost post = new HttpPost("https://accounts.google.com/o/oauth2/revoke?token="+ACCESS_TOKEN);
+//            org.apache.http.HttpResponse response = client.execute(post);
+//        }
+//        catch(IOException e)
+//        {
+//        }
+//        CookieManager.getInstance().removeAllCookie(); // this is clear the cookies which tends to same user in android web view
+//    }
 }
