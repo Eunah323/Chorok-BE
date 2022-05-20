@@ -6,6 +6,7 @@
 //import org.springframework.web.bind.annotation.RestControllerAdvice;
 //
 //import java.io.IOException;
+//import java.io.NotActiveException;
 //
 //@RestControllerAdvice
 //public class RestApiExceptionHandler {
@@ -36,6 +37,18 @@
 //
 //    @ExceptionHandler(value = { IOException.class })
 //    public ResponseEntity<Object> handleApiRequestException(IOException ex) {
+//        RestApiException restApiException = new RestApiException();
+//        restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
+//        restApiException.setErrorMessage(ex.getMessage());
+//
+//        return new ResponseEntity<>(
+//                restApiException,
+//                HttpStatus.BAD_REQUEST
+//        );
+//    }
+//
+//    @ExceptionHandler(value = { NotActiveException.class })
+//    public ResponseEntity<Object> handleApiRequestException(NotActiveException ex) {
 //        RestApiException restApiException = new RestApiException();
 //        restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
 //        restApiException.setErrorMessage(ex.getMessage());
