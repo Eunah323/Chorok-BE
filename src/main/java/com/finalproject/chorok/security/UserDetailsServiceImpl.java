@@ -25,10 +25,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @SneakyThrows
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("여기 들어옴?");
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
+        System.out.println("여기 메세지 왜 안나옴?");
         if (user.isEnabled() != false){
             return new UserDetailsImpl(user);
                 } else throw new NotActiveException("비활성화된 유저입니다.");
+
     }
 }
