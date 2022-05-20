@@ -5,6 +5,7 @@ import com.finalproject.chorok.login.model.User;
 import com.finalproject.chorok.login.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,11 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @SneakyThrows
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("여기 들어옴?");
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
-        System.out.println("여기 메세지 왜 안나옴?");
-        if (user.isEnabled() != false){
+        if (user.isEnabled()){
             return new UserDetailsImpl(user);
                 } else throw new NotActiveException("비활성화된 유저입니다.");
 

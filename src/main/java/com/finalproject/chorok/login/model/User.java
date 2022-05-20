@@ -41,11 +41,8 @@ public class User {
     @Column(unique = true)
     private String emailCheckToken;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private boolean isEnabled;
-
-    @Column(nullable = true)
-    private boolean isNonLocked;
 
     @Setter
     private Long kakaoId;
