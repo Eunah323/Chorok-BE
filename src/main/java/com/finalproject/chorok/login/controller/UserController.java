@@ -111,12 +111,12 @@ public class UserController {
 
     }
 
-    //구글 로그인
-    @GetMapping("/auth/google/callback")
-    public GoogleUserResponseDto googleLogin(@RequestParam String code) throws JsonProcessingException {
-        System.out.println("구글로그인 시작");
-        return googleUserService.googleLogin(code);
-    }
+//    //구글 로그인
+//    @GetMapping("/auth/google/callback")
+//    public GoogleUserResponseDto googleLogin(@RequestParam String code) throws JsonProcessingException {
+//        System.out.println("구글로그인 시작");
+//        return googleUserService.googleLogin(code);
+//    }
 
 
     //임시 비밀번호 보내기

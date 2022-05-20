@@ -34,7 +34,6 @@ public class User {
     @Column(nullable = true, unique = true)
     private String nickname;
 
-
     @Column(nullable = true)
     @Lob //Large Object : 파일이름이 길 경우 대비
     private String profileImageUrl;
@@ -42,19 +41,29 @@ public class User {
     @Column(unique = true)
     private String emailCheckToken;
 
+    @Column(nullable = true)
+    private boolean isEnabled;
+
+    @Column(nullable = true)
+    private boolean isNonLocked;
+
     @Setter
     private Long kakaoId;
-    private Decimal googleId;
+
+    @Setter
+    @Column(nullable = true, length = 1000)
+    private String googleId;
 
     @Builder
-    public User(String username, String password, String nickname, String emailCheckToken, String profileImageUrl) {
+    public User(String username, String password, String nickname, String emailCheckToken, String profileImageUrl, boolean isEnabled, String googleId) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.kakaoId = null;
-        this.googleId = null;
+        this.googleId = googleId;
         this.emailCheckToken = emailCheckToken;
         this.profileImageUrl = profileImageUrl;
+        this.isEnabled = isEnabled;
 
     }
 
@@ -67,14 +76,14 @@ public class User {
 
     }
 
-    public User(String username, String password, String nickname, Long kakaoId, Decimal googleId, String profileImage) {
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.kakaoId = kakaoId;
-        this.googleId = googleId;
-        this.profileImageUrl = profileImage;
-    }
+//    public User(String username, String password, String nickname, Long kakaoId, String googleId, String profileImage) {
+//        this.username = username;
+//        this.password = password;
+//        this.nickname = nickname;
+//        this.kakaoId = kakaoId;
+//        this.googleId = googleId;
+//        this.profileImageUrl = profileImage;
+//    }
 
     public void changePassword(String tempPassword) {
         this.password = tempPassword;

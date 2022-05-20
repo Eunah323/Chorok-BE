@@ -61,36 +61,36 @@ public class GoogleUserService {
     private String clientSecret;
 
 
-    public GoogleUserResponseDto googleLogin(String accessToken) throws JsonProcessingException {
-        //HTTP Request를 위한 RestTemplate
-        RestTemplate restTemplate = new RestTemplate();
-//        System.out.println("여기 들어오나1");
-//        // 1. "인가 코드"로 "액세스 토큰" 요청
-//        String accessToken = getAccessToken(restTemplate, code);
-//        System.out.println("여기 들어오나2");
-        // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        GoogleUserInfoDto snsUserInfoDto = getGoogleUserInfo(restTemplate, accessToken);
-        System.out.println("여기 들어오나3");
-        // 3. "구글 사용자 정보"로 필요시 회원가입  및 이미 같은 이메일이 있으면 기존회원으로 로그인
-        User googleUser = registerGoogleIfNeeded(snsUserInfoDto);
-        System.out.println("여기 들어오나4");
-
-        // 4. 강제 로그인 처리
-        final String AUTH_HEADER = "Authorization";
-        final String TOKEN_TYPE = "BEARER";
-        System.out.println("여기 들어오나5");
-        String jwt_token = forceLogin(googleUser); // 로그인처리 후 토큰 받아오기
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTH_HEADER, TOKEN_TYPE + " " + jwt_token);
-        GoogleUserResponseDto googleUserResponseDto = GoogleUserResponseDto.builder()
-                .token(TOKEN_TYPE + " " + jwt_token)
-                .username(googleUser.getUsername())
-                .nickname(googleUser.getNickname())
-                .build();
-        System.out.println("Google user's token : " + TOKEN_TYPE + " " + jwt_token);
-        System.out.println("LOGIN SUCCESS!");
-        return googleUserResponseDto;
-    }
+//    public GoogleUserResponseDto googleLogin(String accessToken) throws JsonProcessingException {
+//        //HTTP Request를 위한 RestTemplate
+//        RestTemplate restTemplate = new RestTemplate();
+////        System.out.println("여기 들어오나1");
+////        // 1. "인가 코드"로 "액세스 토큰" 요청
+////        String accessToken = getAccessToken(restTemplate, code);
+////        System.out.println("여기 들어오나2");
+//        // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+//        GoogleUserInfoDto snsUserInfoDto = getGoogleUserInfo(restTemplate, accessToken);
+//        System.out.println("여기 들어오나3");
+//        // 3. "구글 사용자 정보"로 필요시 회원가입  및 이미 같은 이메일이 있으면 기존회원으로 로그인
+//        User googleUser = registerGoogleIfNeeded(snsUserInfoDto);
+//        System.out.println("여기 들어오나4");
+//
+//        // 4. 강제 로그인 처리
+//        final String AUTH_HEADER = "Authorization";
+//        final String TOKEN_TYPE = "BEARER";
+//        System.out.println("여기 들어오나5");
+//        String jwt_token = forceLogin(googleUser); // 로그인처리 후 토큰 받아오기
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set(AUTH_HEADER, TOKEN_TYPE + " " + jwt_token);
+//        GoogleUserResponseDto googleUserResponseDto = GoogleUserResponseDto.builder()
+//                .token(TOKEN_TYPE + " " + jwt_token)
+//                .username(googleUser.getUsername())
+//                .nickname(googleUser.getNickname())
+//                .build();
+//        System.out.println("Google user's token : " + TOKEN_TYPE + " " + jwt_token);
+//        System.out.println("LOGIN SUCCESS!");
+//        return googleUserResponseDto;
+//    }
 
 
     private String getAccessToken(RestTemplate restTemplate, String code) throws JsonProcessingException {
@@ -154,45 +154,45 @@ public class GoogleUserService {
         return googleUserInfoDto;
     }
 
-    private User registerGoogleIfNeeded(GoogleUserInfoDto googleUserInfoDto) {
-
-        // DB 에 중복된 google Id 가 있는지 확인
-        Decimal googleUserId = googleUserInfoDto.getGoogleId();
-        User googleUser = userRepository.findByGoogleId(googleUserId)
-                .orElse(null);
-        String nickname = googleUserInfoDto.getNickname();
-
-        if (googleUser == null) {
-            // 회원가입
-            // username: google ID(email)
-            //카카오 사용자 이메일과 동일한 이메일을 가진 회원이 있는지 확인
-
-            String googleEmail = googleUserInfoDto.getEmail();
-            User sameEmailUser = userRepository.findByUsername(googleEmail).orElse(null);
-            if (sameEmailUser != null) {
-                googleUser = sameEmailUser;
-                // 기존 회원정보에 카카오 Id 추가
-                googleUser.setGoogleId(googleUserId);
-            } else {
-                // 신규 회원가입
-                // 닉네임 중복검사
-                User sameNicknameUser = userRepository.findByNickname(nickname).orElse(null);
-                if(sameNicknameUser != null){
-                    nickname = UUID.randomUUID().toString().substring(3,10);
-                }
-                // password: random UUID
-                String password = UUID.randomUUID().toString();
-                String encodedPassword = passwordEncoder.encode(password);
-                // email: kakao email
-                String email = googleUserInfoDto.getEmail();
-                String profileImage = googleUserInfoDto.getProfileImage();
-
-                googleUser = new User(email, encodedPassword, nickname, null, googleUserId, profileImage);
-                Labeling defaultLabeling = new Labeling(googleUser);
-                labelingRepository.save(defaultLabeling);
-            }
-            userRepository.save(googleUser); }
-        return googleUser; }
+//    private User registerGoogleIfNeeded(GoogleUserInfoDto googleUserInfoDto) {
+//
+//        // DB 에 중복된 google Id 가 있는지 확인
+//        Decimal googleUserId = googleUserInfoDto.getGoogleId();
+//        User googleUser = userRepository.findByGoogleId(googleUserId)
+//                .orElse(null);
+//        String nickname = googleUserInfoDto.getNickname();
+//
+//        if (googleUser == null) {
+//            // 회원가입
+//            // username: google ID(email)
+//            //카카오 사용자 이메일과 동일한 이메일을 가진 회원이 있는지 확인
+//
+//            String googleEmail = googleUserInfoDto.getEmail();
+//            User sameEmailUser = userRepository.findByUsername(googleEmail).orElse(null);
+//            if (sameEmailUser != null) {
+//                googleUser = sameEmailUser;
+//                // 기존 회원정보에 카카오 Id 추가
+//                googleUser.setGoogleId(googleUserId);
+//            } else {
+//                // 신규 회원가입
+//                // 닉네임 중복검사
+//                User sameNicknameUser = userRepository.findByNickname(nickname).orElse(null);
+//                if(sameNicknameUser != null){
+//                    nickname = UUID.randomUUID().toString().substring(3,10);
+//                }
+//                // password: random UUID
+//                String password = UUID.randomUUID().toString();
+//                String encodedPassword = passwordEncoder.encode(password);
+//                // email: kakao email
+//                String email = googleUserInfoDto.getEmail();
+//                String profileImage = googleUserInfoDto.getProfileImage();
+//
+//                googleUser = new User(email, encodedPassword, nickname, null, googleUserId, profileImage);
+//                Labeling defaultLabeling = new Labeling(googleUser);
+//                labelingRepository.save(defaultLabeling);
+//            }
+//            userRepository.save(googleUser); }
+//        return googleUser; }
 
 
     private String forceLogin(User googleUser) {

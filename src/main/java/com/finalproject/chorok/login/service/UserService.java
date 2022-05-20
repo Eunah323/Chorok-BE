@@ -76,19 +76,19 @@ public class UserService {
         String emailCheckToken = UUID.randomUUID().toString();
         String profileImgUrl = requestDto.getProfileImgUrl();
 
-        User user = new User(username, password, nickname, emailCheckToken, profileImgUrl);
+        User user = new User(username, password, nickname, emailCheckToken, profileImgUrl, true, "abcd");
 
          //이메일 인증 코드부분
-        redisUtil.set(emailCheckToken, user, 2);
-
-        System.out.println(user+"4");
-
-        sendSignupConfirmEmail(user);
+//        redisUtil.set(emailCheckToken, user, 2);
+//
+//        System.out.println(user+"4");
+//
+//        sendSignupConfirmEmail(user);
 
         // 이메일 인증 생략하고 회원가입(추후 삭제)
-//        User savedUser = userRepository.save(user);
-//        Labeling defaultLabeling = new Labeling(savedUser);
-//        labelingRepository.save(defaultLabeling);
+        User savedUser = userRepository.save(user);
+        Labeling defaultLabeling = new Labeling(savedUser);
+        labelingRepository.save(defaultLabeling);
         return msg;
     }
 
